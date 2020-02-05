@@ -1,0 +1,21 @@
+image: docker:latest
+services:
+- docker:dind
+
+stages:
+- build
+
+variables:
+  LATEST_IMAGE: gitlab.example.com:8888/sammy/hello_hapi:$CI_COMMIT
+  
+before_script:
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN gitlab.example.com:8888
+
+build:
+  stage: build
+  script:
+    - docker build --pull -t $LATEST_IMAGE .
+    - docker push $LATEST_IMAGE
+  only:
+    - master
+

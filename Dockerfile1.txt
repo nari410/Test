@@ -1,0 +1,17 @@
+FROM python:3.6-alpine
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+RUN apk add --no-cache tzdata nano
+ENV TZ=India/Kolkata
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
+    pip install django \
+                djangorestframework \
+                django-rest-auth \
+                django-allauth
+
+CMD ["python","manage.py","runserver"]
+
+EXPOSE 8000
